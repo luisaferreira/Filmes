@@ -26,5 +26,13 @@ namespace FilmesAPI.Controllers
         {
             return Ok(_filmes);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Inserir(Filme filme)
+        {
+            _filmes.Add(filme);
+            return Ok(_filmes);
+        }
     }
 }
