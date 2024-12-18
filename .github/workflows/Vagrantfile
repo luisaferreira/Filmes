@@ -1,0 +1,40 @@
+Vagrant.configure("2") do |config|
+    config.vm.provider "virtualbox"
+  
+    config.vm.define "vm1" do |vm1|
+      vm1.vm.box = "ubuntu/jammy64"
+      vm1.vm.network "private_network", ip: "192.168.56.101"
+      vm1.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+      end
+  
+      vm1.vm.provision "shell", inline: <<-SHELL
+        apt-get update
+        apt-get install -y curl wget
+      SHELL
+    end
+  
+    config.vm.define "vm2" do |vm2|
+      vm2.vm.box = "ubuntu/jammy64"
+      vm2.vm.network "private_network", ip: "192.168.56.102"
+      vm2.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+      end
+  
+      vm2.vm.synced_folder "./app", "/vagrant_data"
+  
+      vm2.vm.provision "shell", inline: <<-SHELL
+        apt-get update
+        apt-get install -y wget apt-transport-https
+        wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+        dpkg -i packages-microsoft-prod.deb
+        apt-get update
+        apt-get install -y dotnet-sdk-9.0
+  
+        cd /vagrant_data
+        dotnet build
+        nohup dotnet run --urls "http://0.0.0.0:5000" &
+      SHELL
+    end
+  end
+  
