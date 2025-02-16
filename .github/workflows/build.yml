@@ -55,3 +55,4 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"luisaferreira_Filmes" /o:"54fb8c71-c578-4657-9421-f45fa0796f26" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ./FilmesAPI
